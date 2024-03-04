@@ -14,9 +14,9 @@ typedef struct
 } Rotation3D;
 
 float cubeWidth = 10;
-int windowWidth = 160, windowHeight = 44;
-float zBuffer[160 * 44];
-char frameBuffer[160 * 44];
+int windowWidth = 80, windowHeight = 22;
+float zBuffer[80 * 22];
+char frameBuffer[80 * 22];
 int backgroundChar = ' ';
 float cubeIncrementStep = 1;
 int viewerDistance = 60;
@@ -89,14 +89,24 @@ void drawCube(Rotation3D rotation)
     {
         for (float cubeY = -cubeWidth; cubeY < cubeWidth; cubeY += cubeIncrementStep)
         {
-            calculateForSurface((Point3D){cubeX, cubeY, -cubeWidth}, '.', rotation);
-            calculateForSurface((Point3D){cubeWidth, cubeY, cubeX}, '$', rotation);
-            calculateForSurface((Point3D){-cubeWidth, cubeY, -cubeX}, '~', rotation);
-            calculateForSurface((Point3D){-cubeX, cubeY, cubeWidth}, '#', rotation);
-            calculateForSurface((Point3D){cubeX, -cubeWidth, -cubeY}, ';', rotation);
-            calculateForSurface((Point3D){cubeX, cubeWidth, cubeY}, '+', rotation);
+            calculateForSurface((Point3D){cubeX, cubeY, -cubeWidth}, 'A', rotation);
+            calculateForSurface((Point3D){cubeWidth, cubeY, cubeX}, 'B', rotation);
+            calculateForSurface((Point3D){-cubeWidth, cubeY, -cubeX}, 'C', rotation);
+            calculateForSurface((Point3D){-cubeX, cubeY, cubeWidth}, 'D', rotation);
+            calculateForSurface((Point3D){cubeX, -cubeWidth, -cubeY}, 'E', rotation);
+            calculateForSurface((Point3D){cubeX, cubeWidth, cubeY}, 'F', rotation);
         }
     }
+}
+
+void incrementRotationAngles()
+{
+    rotationAngles.x += 0.005;
+    rotationAngles.y += 0.005;
+}
+
+void wait(int sleep) {
+    usleep(sleep);
 }
 
 int main()
@@ -115,9 +125,8 @@ int main()
             putchar(k % windowWidth ? frameBuffer[k] : '\n');
         }
 
-        rotationAngles.x += 0.005;
-        rotationAngles.y += 0.005;
-        usleep(1000);
+        incrementRotationAngles();
+        wait(1000);
     }
 
     return 0;
