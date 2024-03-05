@@ -1,11 +1,16 @@
 /**
  * @file main.c
  * @author D. Heger
- * @brief A brief description of the program.
+ * @brief 3D Cube 
+ * 
+ * This project is designed to demonstrate the manipulation of 3D objects,
+ * specifically a cube, using C programming.
+ * The `cube.c` file contains the implementation for 3D point and rotation structures,
+ * among other functionalities.
+ * This simple yet powerful example serves as a basis for understanding 3D
+ * geometry manipulation in computer graphics.
  *
- * A more detailed description of the program.
- *
- * @version 0.1
+ * @version 1.0.0
  * @date 2024-03-05
  *
  */
