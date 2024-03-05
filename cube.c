@@ -1,8 +1,14 @@
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
 /**
  * @file main.c
  * @author D. Heger
- * @brief 3D Cube 
- * 
+ * @brief 3D Cube
+ *
  * This project is designed to demonstrate the manipulation of 3D objects,
  * specifically a cube, using C programming.
  * The `cube.c` file contains the implementation for 3D point and rotation structures,
@@ -14,12 +20,6 @@
  * @date 2024-03-05
  *
  */
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 /**
  * @brief A structure to represent a 3D point.
