@@ -103,24 +103,17 @@ make run
 
 ### v1.1.0 - 2025-08-05
 
-- Modularized codebase: Improved organization by separating source files into distinct modules for better maintainability and clarity.
+- Modularized codebase into separate modules
+- Replaced magic numbers with constants
+- Enhanced error handling
+- Allowing more of a dynamic buffer management than before
 
 ### v1.0.0 - 2024-03-05
 
-- Initial release of the Cube project: This foundational release sets the stage for 3D geometric manipulations, specifically focusing on cube interactions.
-- Implementation of 3D point and rotation structures: Introduced data structures for representing points and rotations in a 3D space, laying the groundwork for geometric calculations and transformations.
-- Advanced rendering techniques:
-  - drawCube function: Implements the core functionality for drawing the cube based on current rotation angles and positions.
-  - calculateForSurface function: A specialized function for computing surface visibility and effects, enhancing the cube's visual representation.
-- Interactive rotation and visualization:
-  - incrementRotationAngles function: Allows dynamic adjustment of the cube's rotation angles, offering interactive visualization experiences.
-- Enhanced terminal interaction:
-  - setNonBlockingMode and resetTerminalMode functions: Ensure a smooth user interaction within the terminal, optimizing the program's usability across different terminal environments.
-  - Performance optimizations:
-  - initializeFrameBuffer and initializeDepthBuffer functions: These functions are integral to optimizing the rendering process, ensuring efficient frame drawing and depth calculations.
-- User experience improvements:
-  - wait function: Implements a simple delay mechanism, enhancing the flow of visualization and interaction by moderating the speed of cube rotations and updates.
-  - Build and run instructions provided in Makefile: Streamlined compilation and execution process, ensuring users can easily build and run the Cube project with minimal setup.
+- Initial release of the project
+- Extensive in-code documentation for clarity
+- Basic 3D cube rendering and rotation
+- Solid makefile as build system
 
 ## Authors
 
