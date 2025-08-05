@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adjusted documentation
 - Enhanced error handling
 - Allowing more of a dynamic buffer management than before
-- Completly rewrote the readme
+- Completely rewrote the readme
 
 ## [1.0.0] - 2024-03-05
 
