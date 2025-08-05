@@ -12,100 +12,84 @@
 #include <stdio.h>
 #include "input.h"
 
-/**
- * @brief Set the terminal to non-blocking mode to detect key presses.
- *
- * This function configures the terminal to operate in non-canonical mode
- * and disables echo, allowing for immediate key detection without waiting
- * for the Enter key to be pressed. This is essential for real-time input
- * handling in the cube animation.
- */
-void setNonBlockingMode()
+void setNonBlockingMode(void)
 {
     struct termios ttystate;
 
-    /* get the terminal state */
-    tcgetattr(STDIN_FILENO, &ttystate);
+    /* Attempt to get current terminal state */
+    if (tcgetattr(STDIN_FILENO, &ttystate) != 0) {
+        return; /* Failed to get terminal attributes */
+    }
 
-    /* turn off canonical mode and echo */
+    /* Configure non-canonical mode */
     ttystate.c_lflag &= ~(ICANON | ECHO);
-    /* minimum of number input read. */
     ttystate.c_cc[VMIN] = 1;
 
-    /* set the terminal attributes. */
+    /* Apply new terminal settings */
     tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
 }
 
-/**
- * @brief Reset the terminal to its original settings.
- *
- * This function restores the terminal to canonical mode and re-enables echo,
- * returning it to normal command-line behavior. Should be called before
- * program termination to ensure proper terminal state and prevent issues
- * with subsequent command-line usage.
- */
-void resetTerminalMode()
+void resetTerminalMode(void)
 {
     struct termios ttystate;
-    tcgetattr(STDIN_FILENO, &ttystate);
+    
+    /* Attempt to get current terminal state */
+    if (tcgetattr(STDIN_FILENO, &ttystate) != 0) {
+        return; /* Failed to get terminal attributes */
+    }
+    
+    /* Restore canonical mode and echo */
     ttystate.c_lflag |= ICANON | ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
 }
 
-/**
- * @brief Check if a specific key is pressed without blocking.
- *
- * This function performs a non-blocking check for keyboard input.
- * It specifically looks for the '1' key press to allow user-controlled
- * program termination. The function temporarily modifies terminal settings
- * to achieve non-blocking behavior, then restores them.
- *
- * @return int Returns 1 if the '1' key is pressed, 0 otherwise.
- */
-int isKeyPressed()
+int isKeyPressed(void)
 {
-    /* Non-blocking check for keyboard input */
     struct termios oldt, newt;
     int ch;
     int oldf;
 
-    /* Save old settings */
-    tcgetattr(STDIN_FILENO, &oldt);
+    /* Save current terminal settings */
+    if (tcgetattr(STDIN_FILENO, &oldt) != 0) {
+        return 0; /* Failed to get terminal attributes */
+    }
     newt = oldt;
 
-    /* Disable buffering */
+    /* Configure non-blocking mode */
     newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &newt) != 0) {
+        return 0; /* Failed to set terminal attributes */
+    }
+    
     oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    if (oldf == -1) {
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); /* Restore on error */
+        return 0;
+    }
 
-    /* Apply non-blocking read */
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    /* Enable non-blocking read */
+    if (fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK) == -1) {
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); /* Restore on error */
+        return 0;
+    }
 
     ch = getchar();
 
-    /* Restore old settings */
+    /* Always restore original settings */
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-    if (ch == '1')
-    {
-        ungetc(ch, stdin); /* Put the character back, in case further handling is needed */
+    if (ch == EXIT_KEY_CODE) {
+        ungetc(ch, stdin); /* Put character back for potential reuse */
         return 1;
     }
 
     return 0;
 }
 
-/**
- * @brief Waits for the specified number of microseconds.
- *
- * This function provides a delay mechanism for controlling frame rate
- * and animation timing in the cube rotation display. It uses the system's
- * usleep function to introduce precise timing delays.
- *
- * @param sleep The number of microseconds to wait.
- */
-void wait(int sleep)
+void wait(int sleep_microseconds)
 {
-    usleep(sleep);
+    if (sleep_microseconds > 0) {
+        usleep((useconds_t)sleep_microseconds);
+    }
 }

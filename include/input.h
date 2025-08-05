@@ -1,7 +1,7 @@
 /**
  * @file input.h
  * @author D. Heger
- * @brief Input handling declarations
+ * @brief Terminal input handling and timing functions
  * @version 1.1.0
  * @date 2025-08-05
  */
@@ -9,43 +9,61 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-/**
- * @brief Set the terminal to non-blocking mode to detect key presses.
- *
- * This function configures the terminal to operate in non-canonical mode
- * and disables echo, allowing for immediate key detection without waiting
- * for the Enter key to be pressed.
- */
-void setNonBlockingMode();
+#include "constants.h"
 
 /**
- * @brief Reset the terminal to its original settings.
+ * @brief Configure terminal for non-blocking input detection
  *
- * This function restores the terminal to canonical mode and re-enables echo,
- * returning it to normal command-line behavior. Should be called before
- * program termination to ensure proper terminal state.
+ * Switches the terminal to non-canonical mode with echo disabled,
+ * enabling immediate key detection without requiring Enter key press.
+ * This is essential for real-time interactive applications.
+ *
+ * @note Must call resetTerminalMode() before program exit to restore terminal
+ * @note May fail silently if terminal attributes cannot be modified
  */
-void resetTerminalMode();
+void setNonBlockingMode(void);
 
 /**
- * @brief Check if a specific key is pressed without blocking.
+ * @brief Restore terminal to original canonical mode
  *
- * This function performs a non-blocking check for keyboard input.
- * It specifically looks for the '1' key press to allow user-controlled
- * program termination.
+ * Reverts terminal settings to canonical mode with echo enabled,
+ * restoring normal command-line behavior. Critical to call before
+ * program termination to prevent terminal corruption.
  *
- * @return int Returns 1 if the '1' key is pressed, 0 otherwise.
+ * @note Should be called in cleanup routines and signal handlers
+ * @note May fail silently if terminal attributes cannot be restored
  */
-int isKeyPressed();
+void resetTerminalMode(void);
 
 /**
- * @brief Waits for the specified number of microseconds.
+ * @brief Non-blocking check for exit key press
  *
- * This function provides a delay mechanism for controlling frame rate
- * and animation timing in the cube rotation display.
+ * Performs a non-blocking poll of stdin to detect if the designated
+ * exit key has been pressed. Uses temporary terminal mode changes
+ * to achieve non-blocking behavior without affecting global state.
  *
- * @param sleep The number of microseconds to wait.
+ * @return int Returns 1 if EXIT_KEY_CODE is pressed, 0 otherwise
+ * 
+ * @note Currently hardcoded to detect '1' key (EXIT_KEY_CODE)
+ * @note Temporarily modifies terminal settings during execution
+ * @note Returns immediately without blocking program execution
  */
-void wait(int sleep);
+int isKeyPressed(void);
+
+/**
+ * @brief Precise microsecond delay for animation timing
+ *
+ * Provides sub-millisecond precision timing delays using the system's
+ * usleep() function. Used to control animation frame rate and ensure
+ * smooth cube rotation visualization.
+ *
+ * @param sleep_microseconds Duration to wait in microseconds (1/1,000,000 second)
+ *                          Valid range: 0 to 999,999 microseconds
+ * 
+ * @note Large values may be rounded to system timer resolution
+ * @note Function may return early if interrupted by signals
+ * @note Parameter renamed for clarity (was 'sleep')
+ */
+void wait(int sleep_microseconds);
 
 #endif // INPUT_H
