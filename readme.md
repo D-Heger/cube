@@ -1,50 +1,111 @@
 
-# Cube Project
+# 3D Cube Visualization Project
 
 ## Description
 
-This project is designed to demonstrate the manipulation of 3D objects, specifically a cube, using C programming. The `cube.c` file contains the implementation for 3D point and rotation structures, among other functionalities. This simple yet powerful example serves as a basis for understanding 3D geometry manipulation in computer graphics.
+This project demonstrates 3D object manipulation and visualization using C programming. The modular design showcases professional software engineering practices with clean separation of concerns across multiple modules for 3D mathematics, rendering, input handling, and cube-specific logic.
+
+## Project Structure
+
+```txt
+cube/
+├── src/                  # Source files
+│   ├── main.c            # Main program loop and initialization
+│   ├── math3d.c          # 3D mathematics and rotation calculations
+│   ├── renderer.c        # Rendering engine and buffer management
+│   ├── input.c           # Terminal input handling and controls
+│   └── cube.c            # Cube-specific drawing and animation logic
+├── include/              # Header files
+│   ├── math3d.h          # 3D structures and function declarations
+│   ├── renderer.h        # Rendering system declarations
+│   ├── input.h           # Input handling declarations
+│   └── cube.h            # Cube logic declarations
+├── build/                # Build artifacts (created during compilation)
+├── Makefile              # Build system configuration
+└── readme.md             # Project documentation
+```
 
 ## Features
 
-- Definition and manipulation of 3D points.
-- 3D rotation structures and algorithms.
-- Simple CLI interface for interacting with the cube model.
+- **Modular Architecture**: Clean separation into math3d, renderer, input, and cube modules
+- **3D Mathematics**: Complete 3D point and rotation transformation system
+- **Real-time Rendering**: Frame buffer and Z-buffer based 3D rendering
+- **Interactive Controls**: Non-blocking terminal input with '1' key to exit
+- **Professional Build System**: Organized directory structure with automated dependency management
+
+## Module Overview
+
+### math3d Module
+
+- **Point3D** and **Rotation3D** structures for 3D geometry
+- Rotation transformation functions for X, Y, Z coordinates
+- Mathematical foundation for 3D object manipulation
+
+### renderer Module
+
+- Frame buffer and depth buffer management
+- Perspective projection and screen coordinate mapping
+- Z-buffering for proper depth testing and visibility
+
+### input Module
+
+- Non-blocking terminal input detection
+- Terminal mode management (canonical/non-canonical)
+- Timing and delay functions for animation control
+
+### cube Module
+
+- Cube geometry generation and face mapping
+- Animation rotation angle management  
+- Integration with rendering system for visualization
 
 ## Getting Started
 
-To get started with the Cube project, clone this repository and build the project using the provided Makefile.
-
 ### Prerequisites
 
-- GCC compiler
-- Basic C library
+- GCC compiler with GNU99 standard support
+- POSIX-compatible system (Linux/macOS/WSL)
+- Make build system
 
 ### Build Instructions
 
 ```bash
-make build
-```
+# Build the project
+make
 
-This command compiles the `cube.c` file into an executable named `cube`. It links the necessary libraries, including math (`-lm`), to ensure the program runs correctly.
+# Or explicitly build without running
+make cube
+
+# Clean build artifacts
+make clean
+
+# Rebuild from scratch
+make rebuild
+```
 
 ### Running the Program
 
-After building, you can run the program using:
-
 ```bash
+# Run after building
 make run
+
+# Or run the executable directly
+./cube
 ```
 
-Alternately, you also can both build and run the program by using:
+### Controls
 
-```bash
-make all
-```
+- **'1' key**: Exit the program
+- The cube rotates automatically with smooth animation
+- Press Ctrl+C as fallback exit method
 
 ## Changelog
 
-### v1.0.0
+### v1.1.0 - 2025-08-05
+
+- Modularized codebase: Improved organization by separating source files into distinct modules for better maintainability and clarity.
+
+### v1.0.0 - 2024-03-05
 
 - Initial release of the Cube project: This foundational release sets the stage for 3D geometric manipulations, specifically focusing on cube interactions.
 - Implementation of 3D point and rotation structures: Introduced data structures for representing points and rotations in a 3D space, laying the groundwork for geometric calculations and transformations.
