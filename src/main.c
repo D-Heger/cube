@@ -21,8 +21,18 @@
 #include "input.h"
 #include "cube.h"
 
+/* External buffer size reference */
+extern int bufferSize;
+extern char* frameBuffer;
+
 int main(void)
 {
+    /* Initialize rendering system with default dimensions */
+    if (initializeRenderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT) != ALLOCATION_SUCCESS) {
+        fprintf(stderr, "Error: Failed to initialize rendering system\n");
+        return 1;
+    }
+
     /* Initialize terminal display */
     printf(CLEAR_SCREEN_SEQ);
     setNonBlockingMode();
@@ -30,16 +40,23 @@ int main(void)
     /* Main animation loop */
     while (1) {
         /* Clear buffers for new frame */
-        initializeFrameBuffer();
-        initializeDepthBuffer();
+        if (initializeFrameBuffer() != ALLOCATION_SUCCESS ||
+            initializeDepthBuffer() != ALLOCATION_SUCCESS) {
+            fprintf(stderr, "Error: Buffer initialization failed\n");
+            break;
+        }
 
         /* Generate and render cube geometry */
         drawCube(rotationAngles);
 
         /* Display frame buffer to terminal */
         printf(HOME_CURSOR_SEQ);
-        for (int pixelIndex = 0; pixelIndex < BUFFER_SIZE; pixelIndex++) {
-            putchar(pixelIndex % windowWidth ? frameBuffer[pixelIndex] : '\n');
+        
+        /* Bounds-safe buffer display */
+        if (frameBuffer != NULL && bufferSize > 0) {
+            for (int pixelIndex = 0; pixelIndex < bufferSize; pixelIndex++) {
+                putchar(pixelIndex % windowWidth ? frameBuffer[pixelIndex] : '\n');
+            }
         }
 
         /* Check for exit condition */
@@ -54,5 +71,6 @@ int main(void)
 
     /* Cleanup and exit */
     resetTerminalMode();
+    cleanupRenderer();
     return 0;
 }

@@ -10,9 +10,16 @@
 #define CONSTANTS_H
 
 /* Display and rendering constants */
-#define WINDOW_WIDTH        80                                  /**< Terminal window width in characters */
-#define WINDOW_HEIGHT       22                                  /**< Terminal window height in characters */
-#define BUFFER_SIZE         (WINDOW_WIDTH * WINDOW_HEIGHT)      /**< Total buffer size */
+#define DEFAULT_WINDOW_WIDTH    80      /**< Default terminal window width in characters */
+#define DEFAULT_WINDOW_HEIGHT   22      /**< Default terminal window height in characters */
+#define MIN_WINDOW_WIDTH        10      /**< Minimum supported window width */
+#define MIN_WINDOW_HEIGHT       5       /**< Minimum supported window height */
+#define MAX_WINDOW_WIDTH        200     /**< Maximum supported window width */
+#define MAX_WINDOW_HEIGHT       100     /**< Maximum supported window height */
+
+/* Memory allocation constants */
+#define ALLOCATION_SUCCESS      0       /**< Successful memory allocation return code */
+#define ALLOCATION_FAILURE      -1      /**< Failed memory allocation return code */
 
 /* Cube geometry constants */
 #define DEFAULT_CUBE_WIDTH      10.0f                           /**< Default cube width/height/depth */

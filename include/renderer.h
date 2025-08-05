@@ -13,28 +13,35 @@
 #include "constants.h"
 
 /**
- * @brief The width and height of the display window
+ * @brief Current display window dimensions
  * 
  * These values define the terminal display dimensions in characters.
- * They are initialized to default values but can be modified at runtime.
+ * They can be dynamically configured within MIN/MAX limits.
  */
 extern int windowWidth, windowHeight;
 
 /**
- * @brief Depth buffer for Z-buffering and visibility testing
+ * @brief Current buffer size based on window dimensions
  * 
- * Stores the inverse depth (1/z) value for each pixel to determine
- * which surfaces are visible. Higher values indicate closer objects.
+ * Calculated as windowWidth * windowHeight. Updated when window size changes.
  */
-extern float zBuffer[BUFFER_SIZE];
+extern int bufferSize;
 
 /**
- * @brief Frame buffer containing the characters to display
+ * @brief Dynamically allocated depth buffer for Z-buffering
+ * 
+ * Stores the inverse depth (1/z) value for each pixel to determine
+ * which surfaces are visible. Allocated based on current window size.
+ */
+extern float* zBuffer;
+
+/**
+ * @brief Dynamically allocated frame buffer for display characters
  * 
  * Each element corresponds to one character position on the terminal screen.
- * Characters represent different cube faces or background space.
+ * Allocated based on current window size.
  */
-extern char frameBuffer[BUFFER_SIZE];
+extern char* frameBuffer;
 
 /**
  * @brief Background character used for empty screen areas
@@ -69,14 +76,53 @@ extern float projectionScaleFactor;
 extern int bufferIndex;
 
 /**
+ * @brief Initialize the rendering system with specified window dimensions
+ * 
+ * Allocates memory for frame and depth buffers based on the specified dimensions.
+ * Must be called before any rendering operations.
+ * 
+ * @param width Display width in characters (must be within MIN/MAX limits)
+ * @param height Display height in characters (must be within MIN/MAX limits)
+ * @return ALLOCATION_SUCCESS on success, ALLOCATION_FAILURE on error
+ * 
+ * @note Validates input dimensions against MIN/MAX constants
+ * @note Frees any existing buffers before allocating new ones
+ */
+int initializeRenderer(int width, int height);
+
+/**
+ * @brief Cleanup and free all allocated rendering resources
+ * 
+ * Deallocates frame and depth buffers. Should be called before program exit
+ * or when changing window dimensions.
+ * 
+ * @note Safe to call multiple times or with NULL buffers
+ */
+void cleanupRenderer(void);
+
+/**
+ * @brief Resize the rendering buffers to new dimensions
+ * 
+ * Reallocates buffers with new dimensions, preserving existing content where possible.
+ * 
+ * @param newWidth New display width in characters
+ * @param newHeight New display height in characters
+ * @return ALLOCATION_SUCCESS on success, ALLOCATION_FAILURE on error
+ * 
+ * @note Validates new dimensions before allocation
+ * @note Falls back to previous size on allocation failure
+ */
+int resizeRenderer(int newWidth, int newHeight);
+
+/**
  * @brief Initialize the frame buffer for a new frame
  * 
  * Clears the frame buffer by filling all positions with the background character.
  * Must be called before each frame to ensure clean rendering.
  * 
- * @note This function does not perform error checking on buffer access
+ * @return ALLOCATION_SUCCESS on success, ALLOCATION_FAILURE if buffer not allocated
  */
-void initializeFrameBuffer(void);
+int initializeFrameBuffer(void);
 
 /**
  * @brief Initialize the depth buffer for Z-buffer testing
@@ -84,9 +130,9 @@ void initializeFrameBuffer(void);
  * Resets all depth buffer values to zero, preparing for depth testing during rendering.
  * Must be called before each frame to ensure proper visibility calculations.
  * 
- * @note This function does not perform error checking on buffer access
+ * @return ALLOCATION_SUCCESS on success, ALLOCATION_FAILURE if buffer not allocated
  */
-void initializeDepthBuffer(void);
+int initializeDepthBuffer(void);
 
 /**
  * @brief Project and render a 3D point to the screen buffer
