@@ -1,2 +1,5 @@
 cube
-build/
+build/*.o
+build/cube
+build/benchmark
+logs/*.csv
