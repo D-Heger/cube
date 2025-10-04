@@ -123,6 +123,6 @@ This project is open-source and available under the [MIT License](LICENSE).
 <!-- Links -->
 [release]: https://github.com/D-Heger/cube/releases
 <!-- Badges -->
-[changelog-badge]: https://img.shields.io/badge/changelog-1.1.0-blue.svg
+[changelog-badge]: https://img.shields.io/badge/changelog-1.2.0-blue.svg
 [license-badge]: https://img.shields.io/badge/license-MIT-green.svg
-[release-badge]: https://img.shields.io/badge/cube-v1.1.0-orange.svg
+[release-badge]: https://img.shields.io/badge/cube-v1.2.0-orange.svg
