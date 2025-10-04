@@ -81,6 +81,29 @@ make rebuild
 * Press the `1` key to exit cleanly.
 * If needed, you can always stop the program with `Ctrl+C`.
 
+## Benchmarking
+
+A dedicated benchmark harness is available to measure frame latency and capture memory metrics.
+
+```bash
+# Build and run the harness (default 10 second measurement window)
+# Default output file is logs/benchmark.csv
+make benchmark
+```
+
+The harness renders frames without terminal animation, printing a timing summary to `stdout` and appending structured results to `logs/benchmark.csv`. Configure the run duration or log location via environment variables:
+
+* `RUN_SECONDS`: measurement window in seconds (minimum 1.0, defaults to 10.0)
+* `CUBE_BENCHMARK_LOG`: path to the CSV output file (defaults to `logs/benchmark.csv`)
+
+Example:
+
+```bash
+RUN_SECONDS=5 CUBE_BENCHMARK_LOG=/tmp/cube-bench.csv make benchmark
+```
+
+Each CSV row contains: `timestamp,frames,total_ms,avg_ms,p95_ms,max_ms,max_rss_kib`.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for a detailed list of changes and release history.
